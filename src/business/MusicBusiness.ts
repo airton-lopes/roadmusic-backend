@@ -13,24 +13,33 @@ constructor(
     private tokenGenerator: TokenGenerator
 ){}
 
-    public async saveMusic(
+public async saveMusic(
+    token: string,
+    title: string,
+    author: string,
+    file: string,
+    genre: string[],
+    album: string
+) {
+    const userData = this.tokenGenerator.verify(token);
+    const id = this.idGenerator.generate();
+    const date = dayjs().format("YYYY-MM-DD")
+
+    if (!title || !author || !date || !file || !genre || !album) {
+        throw new InvalidParameterError("Missing input");
+    }
+
+    await this.musicDatabase.createMusic(
+        new Music(id, userData.id, title, author, date, file, genre, album)
+    );
+}
+
+    public async getMusic(
         token: string,
-    	title: string,
-	    author: string,
-        file: string,
-        genre: string[],
-	    album: string
+        music_id: string
     ) {
-        this.tokenGenerator.verify(token);
-        const id = this.idGenerator.generate();
-        const date = dayjs().format("YYYY-MM-DD")
-
-        if (!title || !author || !date || !file || !genre || !album) {
-            throw new InvalidParameterError("Missing input");
-        }
-
-        await this.musicDatabase.createMusic(
-            new Music(id, title, author, date, file, genre, album)
-        );
+        const userData = this.tokenGenerator.verify(token);
+        const result = await this.musicDatabase.getMusic(userData.id, music_id)
+        return result
     }
 }

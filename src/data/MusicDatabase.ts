@@ -9,6 +9,7 @@ private toModel(dbModel?: any): Music | undefined {
     dbModel &&
     new Music(
         dbModel.id,
+        dbModel.user_id,
         dbModel.title,
         dbModel.author,
         dbModel.date,
@@ -19,17 +20,28 @@ private toModel(dbModel?: any): Music | undefined {
     );
 }
 
-public async createMusic(song: Music): Promise<void> {
-    await super.getConnection().raw(`
-        INSERT INTO ${this.tableName} (id, title, author, date, file, genre, album)
-        VALUES (
-        '${song.getId()}', 
-        '${song.getTitle()}', 
-        '${song.getAuthor()}',
-        '${song.getDate()}',
-        '${song.getFile()}',
-        '${song.getGenre()}',
-        '${song.getAlbum()}'
-        )`);
-}
+    public async createMusic(song: Music): Promise<void> {
+        await super.getConnection().raw(`
+            INSERT INTO ${this.tableName} (id, user_id, title, author, date, file, genre, album)
+            VALUES (
+            '${song.getId()}', 
+            '${song.getUserId()}', 
+            '${song.getTitle()}', 
+            '${song.getAuthor()}',
+            '${song.getDate()}',
+            '${song.getFile()}',
+            '${song.getGenre()}',
+            '${song.getAlbum()}'
+            )`);
+    }
+
+    public async getMusic(user_id: string, music_id?: string): Promise<void> {
+        let aditionalCondition =  `AND id LIKE '${music_id}'`
+        if(!music_id) {
+        aditionalCondition = ''
+    };
+        const result = await super.getConnection().raw(`SELECT title, author, date, file, genre, album FROM ${this.tableName}
+        WHERE user_id LIKE '${user_id}'${aditionalCondition}`);
+        return (result[0]);
+    }
 }

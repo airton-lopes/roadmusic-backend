@@ -15,7 +15,8 @@ export class MusicController {
 
   public async saveMusic(req: Request, res: Response) {
     try {
-      const result = await MusicController.musicBusiness.saveMusic(
+      const input = 
+      await MusicController.musicBusiness.saveMusic(
         req.headers.authorization as string,
         req.body.title,
         req.body.author,
@@ -31,5 +32,22 @@ export class MusicController {
     } finally {
       await BaseDataBase.destroyConnection()
     }
+  }
+
+  public async getMusic(req: Request, res: Response) {
+      try {
+          const music = await MusicController.musicBusiness.getMusic(
+            req.headers.authorization as string,
+            req.params.music_id as string
+          );
+          res.status(200).send({
+              music
+          })
+      } catch (error) {
+          res.status(error.errorCode || 400).send({
+              message: error.message });
+      } finally {
+        await BaseDataBase.destroyConnection()
+      }
   }
 }
