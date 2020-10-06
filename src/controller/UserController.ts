@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { UserBusiness } from "../business/UserBusiness";
+import { BaseDataBase } from "../data/BaseDatabase";
 import { UserDatabase } from "../data/UserDatabase";
 import { HashGenerator } from "../services/hashGenerator";
 import { IdGenerator } from "../services/idGenerator";
@@ -25,6 +26,8 @@ export class UserController {
       res.status(200).send(result);
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
+    } finally {
+      await BaseDataBase.destroyConnection()
     }
   }
 
@@ -36,6 +39,8 @@ export class UserController {
       res.status(200).send(result);
     } catch (err) {
       res.status(err.errorCode || 400).send({ message: err.message });
+    } finally {
+      await BaseDataBase.destroyConnection()
     }
   }
 }

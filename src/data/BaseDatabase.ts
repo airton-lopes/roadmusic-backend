@@ -5,7 +5,6 @@ import Knex from "knex";
 dotenv.config();
 
 export abstract class BaseDataBase {
-  protected abstract tableName: string;
 
   private static connection: Knex | null = null;
 
@@ -26,9 +25,11 @@ export abstract class BaseDataBase {
     return BaseDataBase.connection;
   }
 
-  public async distroyConnection(): Promise<void> {
-    if (BaseDataBase.connection) {
-      await BaseDataBase.connection.destroy();
-    }
+  static async destroyConnection(): Promise<void> {
+    if(BaseDataBase.connection) {
+    await BaseDataBase.connection.destroy()
+    BaseDataBase.connection = null
+  }
+  
   }
 }

@@ -5,8 +5,8 @@ const userDatabase = {
    createUser: jest.fn(
       async (user: User) => { }
    ),
-   getUserByEmail: jest.fn(
-      (email: string) => undefined
+   getUser: jest.fn(
+      (emailOrNickname: string) => undefined
    )
 } as any
 const idGenerator = {
@@ -190,7 +190,7 @@ describe("Testa o método de login", () => {
    test("Deve retornar erro quando a senha estiver incorreta", async () => {
       expect.assertions(2)
 
-      userDatabase.getUserByEmail = (email: string) => {
+      userDatabase.getUser = (emailOrNickname: string) => {
          return new User(
             "id",
             "Astrodev",

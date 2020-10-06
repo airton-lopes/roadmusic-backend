@@ -2,7 +2,7 @@ import { BaseDataBase } from "./BaseDatabase";
 import { User } from "../model/User";
 
 export class UserDatabase extends BaseDataBase {
-  protected tableName: string = "roadMusicUsers";
+  protected roadMusicUsersTable: string = "roadMusicUsers";
 
   private toModel(dbModel?: any): User | undefined {
     return (
@@ -19,7 +19,7 @@ export class UserDatabase extends BaseDataBase {
 
   public async createUser(user: User): Promise<void> {
     await super.getConnection().raw(`
-        INSERT INTO ${this.tableName} (id, name, email, nickname, password)
+        INSERT INTO ${this.roadMusicUsersTable} (id, name, email, nickname, password)
         VALUES (
           '${user.getId()}', 
           '${user.getName()}', 
@@ -31,7 +31,7 @@ export class UserDatabase extends BaseDataBase {
 
   public async getUser(emailOrNickname: string): Promise<User | undefined> {
     const result = await super.getConnection().raw(`
-      SELECT * from ${this.tableName} WHERE email = '${emailOrNickname}' OR nickname = '${emailOrNickname}'
+      SELECT * from ${this.roadMusicUsersTable} WHERE email = '${emailOrNickname}' OR nickname = '${emailOrNickname}'
       `);
     return this.toModel(result[0][0]);
   }
