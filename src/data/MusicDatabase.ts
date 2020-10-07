@@ -47,9 +47,11 @@ private toModel(dbModel?: any): Music | undefined {
     }
 
     public async getMusicByQueryName(user_id: string, search: string): Promise<musicOutputDTO[]> {
+
         const result = await super.getConnection().raw(`
         SELECT title, author, date, file, genre, album FROM ${this.tableName}
-        WHERE user_id LIKE '${user_id}' AND author LIKE '%${search}%' OR title LIKE '%${search}%'
+        WHERE (user_id LIKE '${user_id}' AND author LIKE '%${search}%') OR
+        (user_id LIKE '${user_id}' AND  title LIKE '%${search}%')
         `);
         return (result[0])
     }
