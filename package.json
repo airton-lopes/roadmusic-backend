@@ -31,10 +31,7 @@
     "ts-jest": "^26.1.0",
     "ts-node-dev": "^1.0.0-pre.44",
     "typescript": "^3.9.2",
-    "uuid": "^8.0.0"
-  },
-  "devDependencies": {
+    "uuid": "^8.0.0",
     "@types/cors": "^2.8.7",
     "cors": "^2.8.5"
-  }
 }
