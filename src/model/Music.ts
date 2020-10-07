@@ -42,3 +42,11 @@ export class Music {
     return this.album;
   }
 }
+
+export interface musicInputDTO {
+  title: string,
+  author: string,
+  file: string,
+  genre: string[],
+  album: string
+}

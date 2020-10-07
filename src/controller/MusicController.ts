@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { MusicBusiness } from "../business/MusicBusiness";
 import { BaseDataBase } from "../data/BaseDatabase";
 import { MusicDatabase } from "../data/MusicDatabase";
+import { musicInputDTO } from "../model/Music";
 import { IdGenerator } from "../services/idGenerator";
 import { TokenGenerator } from "../services/tokenGenerator";
 
@@ -15,15 +16,15 @@ export class MusicController {
 
   public async saveMusic(req: Request, res: Response) {
     try {
-      const input = 
-      await MusicController.musicBusiness.saveMusic(
-        req.headers.authorization as string,
+      const headers = req.headers.authorization as string
+      const input: musicInputDTO = {
         req.body.title,
         req.body.author,
         req.body.file,
         req.body.genre as string[],
         req.body.album
-      );
+      }
+      await MusicController.musicBusiness.saveMusic(headers, input.title, input.author, input.file, input.genre, input.album);
       res.status(200).send({
         message: 'Música cadastrada com sucesso!'
       });
