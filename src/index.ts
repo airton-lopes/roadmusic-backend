@@ -3,13 +3,16 @@ import { AddressInfo } from "net";
 import dotenv from 'dotenv';
 import { userRouter } from "./router/UserRouter";
 import { musicRouter } from "./router/MusicRouter";
+import cors from "cors";
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-app.use("/", userRouter);
-app.use("/", musicRouter);
+app.use("/user", userRouter);
+app.use("/music", musicRouter);
+
+app.use(cors({ origin: true }));
 
 const server = app.listen(process.env.PORT || 3000, () => {
         if (server) {

@@ -1,5 +1,5 @@
 import { BaseDataBase } from "./BaseDatabase";
-import { Music } from "../model/Music";
+import { Music, musicInputDTO, musicOutputDTO } from "../model/Music";
 
 export class MusicDatabase extends BaseDataBase {
 protected tableName: string = "roadMusicSongs";
@@ -35,13 +35,22 @@ private toModel(dbModel?: any): Music | undefined {
             )`);
     }
 
-    public async getMusic(user_id: string, music_id?: string): Promise<void> {
+    public async getMusic(user_id: string, music_id?: string): Promise<musicOutputDTO[]> {
         let aditionalCondition =  `AND id LIKE '${music_id}'`
         if(!music_id) {
         aditionalCondition = ''
     };
         const result = await super.getConnection().raw(`SELECT title, author, date, file, genre, album FROM ${this.tableName}
-        WHERE user_id LIKE '${user_id}'${aditionalCondition}`);
+        WHERE user_id LIKE '${user_id}'${aditionalCondition}
+        `);
         return (result[0]);
+    }
+
+    public async getMusicByQueryName(user_id: string, search: string): Promise<musicOutputDTO[]> {
+        const result = await super.getConnection().raw(`
+        SELECT title, author, date, file, genre, album FROM ${this.tableName}
+        WHERE user_id LIKE '${user_id}' AND author LIKE '%${search}%' OR title LIKE '%${search}%'
+        `);
+        return (result[0])
     }
 }

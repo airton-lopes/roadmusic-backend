@@ -1,7 +1,7 @@
 import { IdGenerator } from "../services/idGenerator";
 import { TokenGenerator } from "../services/tokenGenerator";
 import { InvalidParameterError } from "../errors/InvalidParameterError";
-import { Music } from "../model/Music";
+import { Music, musicInputDTO } from "../model/Music";
 import { MusicDatabase } from "../data/MusicDatabase";
 import dayjs from "dayjs";
 
@@ -14,23 +14,19 @@ constructor(
 ){}
 
 public async saveMusic(
-    token: string,
-    title: string,
-    author: string,
-    file: string,
-    genre: string[],
-    album: string
+    input: musicInputDTO,
+    token: string
 ) {
     const userData = this.tokenGenerator.verify(token);
     const id = this.idGenerator.generate();
     const date = dayjs().format("YYYY-MM-DD")
 
-    if (!title || !author || !date || !file || !genre || !album) {
+    if (!input.title || !input.author || !input.file || !input.genre || !input.album) {
         throw new InvalidParameterError("Missing input");
     }
 
     await this.musicDatabase.createMusic(
-        new Music(id, userData.id, title, author, date, file, genre, album)
+        new Music(id, userData.id, input.title, input.author, date, input.file, input.genre, input.album)
     );
 }
 
@@ -40,6 +36,16 @@ public async saveMusic(
     ) {
         const userData = this.tokenGenerator.verify(token);
         const result = await this.musicDatabase.getMusic(userData.id, music_id)
+
+        return result
+    }
+
+    public async getMusicByQueryName(
+        token: string,
+        search: string
+    ) {
+        const userData = this.tokenGenerator.verify(token);
+        const result = await this.musicDatabase.getMusicByQueryName(userData.id, search)
         return result
     }
 }

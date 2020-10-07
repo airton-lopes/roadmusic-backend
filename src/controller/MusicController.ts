@@ -16,20 +16,22 @@ export class MusicController {
 
   public async saveMusic(req: Request, res: Response) {
     try {
-      const headers = req.headers.authorization as string
-      const input: musicInputDTO = {
-        req.body.title,
-        req.body.author,
-        req.body.file,
-        req.body.genre as string[],
-        req.body.album
-      }
-      await MusicController.musicBusiness.saveMusic(headers, input.title, input.author, input.file, input.genre, input.album);
-      res.status(200).send({
-        message: 'Música cadastrada com sucesso!'
-      });
-    } catch (err) {
-      res.status(err.errorCode || 400).send({ message: err.message });
+        const input: musicInputDTO = {
+          title : req.body.title,
+          author: req.body.author,
+          file: req.body.file,
+          genre: req.body.genre as string[],
+          album: req.body.album
+        }
+        const token = req.headers.authorization as string
+        await MusicController.musicBusiness.saveMusic(
+        input, token
+        );
+    res.status(200).send({
+      message: 'Música cadastrada com sucesso!'
+    });
+    } catch (error) {
+      res.status(error.errorCode || 400).send({ message: error.message });
     } finally {
       await BaseDataBase.destroyConnection()
     }
@@ -39,16 +41,35 @@ export class MusicController {
       try {
           const music = await MusicController.musicBusiness.getMusic(
             req.headers.authorization as string,
-            req.params.music_id as string
+            req.params.id as string
           );
           res.status(200).send({
               music
           })
       } catch (error) {
           res.status(error.errorCode || 400).send({
-              message: error.message });
+            message: error.message
+          });
       } finally {
         await BaseDataBase.destroyConnection()
       }
+  }
+  
+  public async getMusicByQueryName(req: Request, res: Response) {
+    try {
+      const music = await MusicController.musicBusiness.getMusicByQueryName(
+        req.headers.authorization as string,
+        req.query.search as string
+      );
+      res.status(200).send({
+        music
+      })
+    } catch (error) {
+      res.status(error.errorCode || 400).send({
+        message: error.message
+      });
+    } finally {
+      await BaseDataBase.destroyConnection()
+    }
   }
 }

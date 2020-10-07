@@ -3,5 +3,6 @@ import { MusicController } from "../controller/MusicController";
 
 export const musicRouter = express.Router();
 
-musicRouter.post("/savemusic", new MusicController().saveMusic);
-musicRouter.get("/music", new MusicController().getMusic);
+musicRouter.post("/", new MusicController().saveMusic);
+musicRouter.get("/:id", new MusicController().getMusic);
+musicRouter.get("/", new MusicController().getMusicByQueryName);

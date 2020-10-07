@@ -50,3 +50,11 @@ export interface musicInputDTO {
   genre: string[],
   album: string
 }
+
+export interface musicOutputDTO {
+  title: string,
+  author: string,
+  file: string,
+  genre: string[],
+  album: string
+}
