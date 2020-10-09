@@ -128,7 +128,7 @@ describe("Testa o método de cadastro", () => {
       }
    })
 
-   test("Deve retornar um token de acesso", async () => {
+   test("Deve retornar um accessToken de acesso", async () => {
 
 
       const result = await userBusiness.signup(
@@ -211,7 +211,7 @@ describe("Testa o método de login", () => {
       }
    })
 
-   test("Deve retornar um token de acesso", async () => {
+   test("Deve retornar um accessToken de acesso", async () => {
 
       hashGenerator.compareHash = jest.fn(
          async (s: string, hash: string) => true
