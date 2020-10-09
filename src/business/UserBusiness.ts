@@ -42,16 +42,16 @@ constructor(
             new User(id, name, email, nickname, cypherPassword)
         );
 
-        const Token = this.tokenGenerator.generate({
+        const accessToken = this.tokenGenerator.generate({
             id
         });
-        return Token;
+        return {accessToken};
     }
 
     public async login(
         emailOrNickname: string,
         password: string
-        ):Promise<string> {
+        ) {
 
         if (!emailOrNickname || !password) {
             throw new InvalidParameterError("Missing input");
@@ -72,10 +72,10 @@ constructor(
             throw new InvalidParameterError("Invalid password");
         }
 
-        const Token = this.tokenGenerator.generate({
+        const accessToken = this.tokenGenerator.generate({
             id: user.getId()
         });
 
-        return Token
+        return {accessToken};
     }
 }
