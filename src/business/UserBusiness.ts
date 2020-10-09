@@ -45,10 +45,13 @@ constructor(
         const accessToken = this.tokenGenerator.generate({
             id
         });
-        return { accessToken };
+        return accessToken;
     }
 
-    public async login(emailOrNickname: string, password: string) {
+    public async login(
+        emailOrNickname: string,
+        password: string
+        ) {
 
         if (!emailOrNickname || !password) {
             throw new InvalidParameterError("Missing input");
@@ -73,6 +76,6 @@ constructor(
             id: user.getId()
         });
 
-        return { accessToken };
+        return accessToken;
     }
 }
